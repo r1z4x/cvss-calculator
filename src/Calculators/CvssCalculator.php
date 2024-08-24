@@ -1,12 +1,13 @@
 <?php
 
-namespace Rootshell\Cvss\Calculators;
+namespace Rootshell\CVSS\Calculators;
 
-use Rootshell\Cvss\ValueObjects\CvssObject;
+use Rootshell\CVSS\ValueObjects\CVSSObject;
 
-interface CvssCalculator
+interface CVSSCalculator
 {
-    public function calculateBaseScore(CvssObject $cvssObject): float;
-    public function calculateTemporalScore(CvssObject $cvssObject): float;
-    public function calculateEnvironmentalScore(CvssObject $cvssObject): float;
+    public function calculateBaseScore(CVSSObject $cvssObject): float;
+    public function calculateTemporalScore(CVSSObject $cvssObject): float;
+    public function calculateEnvironmentalScore(CVSSObject $cvssObject): float;
+    public function calculateSeverity(CVSSObject $cvssObject): string;
 }

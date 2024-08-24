@@ -1,12 +1,12 @@
 <?php
 
-namespace Rootshell\Cvss\Parsers;
+namespace Rootshell\CVSS\Parsers;
 
-use Rootshell\Cvss\Exceptions\CvssException;
-use Rootshell\Cvss\ValueObjects\Cvss23Object;
-use Rootshell\Cvss\ValueObjects\Cvss4Object;
+use Rootshell\CVSS\Exceptions\CVSSException;
+use Rootshell\CVSS\ValueObjects\CVSS23Object;
+use Rootshell\CVSS\ValueObjects\CVSS4Object;
 
-class Cvss40Parser
+class CVSS40Parser
 {
     private const NETWORK = 'N';
     private const ADJACENT = 'A';
@@ -45,14 +45,14 @@ class Cvss40Parser
     private const CONFIDENTIALITY_REQUIREMENT = 'CR';
     private const INTEGRITY_REQUIREMENT = 'IR';
 
-    public function parseVector(string $vector): Cvss4Object
+    public function parseVector(string $vector): CVSS4Object
     {
         $cr = $this->findOptionalValueInVector($vector, self::CONFIDENTIALITY_REQUIREMENT) ?? self::HIGH;
         $ir = $this->findOptionalValueInVector($vector, self::INTEGRITY_REQUIREMENT) ?? self::HIGH;
         $ar = $this->findOptionalValueInVector($vector, self::AVAILABILITY_REQUIREMENTS) ?? self::HIGH;
         $e = $this->findOptionalValueInVector($vector, self::EXPLOIT_MATURITY) ?? self::ATTACKED;
 
-        return new Cvss4Object(
+        return new CVSS4Object(
             eq1: $this->parseEQOne($vector),
             eq2: $this->parseEQTwo($vector),
             eq3: $this->parseEQThree($vector),
@@ -318,7 +318,7 @@ class Cvss40Parser
         $result = $this->findOptionalValueInVector($vector, $section);
 
         if (is_null($result)) {
-            throw CvssException::missingValue();
+            throw CVSSException::missingValue();
         }
 
         return $result;

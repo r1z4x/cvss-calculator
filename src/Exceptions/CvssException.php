@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Rootshell\Cvss\Exceptions;
+namespace Rootshell\CVSS\Exceptions;
 
 use Exception;
 
-class CvssException extends Exception
+class CVSSException extends Exception
 {
     public static function invalidValue(): self
     {

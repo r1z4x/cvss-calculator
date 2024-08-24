@@ -2,26 +2,26 @@
 
 declare(strict_types=1);
 
-namespace Rootshell\Cvss\Test;
+namespace Rootshell\CVSS\Test;
 
 use PHPUnit\Framework\TestCase;
-use Rootshell\Cvss\Calculators\Cvss31Calculator;
-use Rootshell\Cvss\ValueObjects\Cvss23Object;
-use Rootshell\Cvss\ValueObjects\Cvss4Object;
+use Rootshell\CVSS\Calculators\CVSS31Calculator;
+use Rootshell\CVSS\ValueObjects\CVSS23Object;
+use Rootshell\CVSS\ValueObjects\CVSS4Object;
 
-class Cvss31CalculatorTest extends TestCase
+class CVSS31CalculatorTest extends TestCase
 {
-    private Cvss31Calculator $calculator;
+    private CVSS31Calculator $calculator;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->calculator = new Cvss31Calculator;
+        $this->calculator = new CVSS31Calculator;
     }
 
     public function testBaseScoreUnchangedScope(): void
     {
-        $cvssObject = new Cvss23Object;
+        $cvssObject = new CVSS23Object;
         $cvssObject->confidentiality = 0.22;
         $cvssObject->integrity = 0.22;
         $cvssObject->availability = 0.22;
@@ -38,7 +38,7 @@ class Cvss31CalculatorTest extends TestCase
 
     public function testBaseScoreUnchangedScopeMax(): void
     {
-        $cvssObject = new Cvss23Object;
+        $cvssObject = new CVSS23Object;
         $cvssObject->confidentiality = 0.56;
         $cvssObject->integrity = 0.56;
         $cvssObject->availability = 0.56;
@@ -55,7 +55,7 @@ class Cvss31CalculatorTest extends TestCase
 
     public function testBaseScoreUnchangedScopeOverflow(): void
     {
-        $cvssObject = new Cvss23Object;
+        $cvssObject = new CVSS23Object;
         $cvssObject->confidentiality = 0.90;
         $cvssObject->integrity = 0.90;
         $cvssObject->availability = 0.90;
@@ -72,7 +72,7 @@ class Cvss31CalculatorTest extends TestCase
 
     public function testBaseScoreChangedScope(): void
     {
-        $cvssObject = new Cvss23Object;
+        $cvssObject = new CVSS23Object;
         $cvssObject->confidentiality = 0.22;
         $cvssObject->integrity = 0.22;
         $cvssObject->availability = 0.22;
@@ -89,7 +89,7 @@ class Cvss31CalculatorTest extends TestCase
 
     public function testBaseScoreChangedScopeMax(): void
     {
-        $cvssObject = new Cvss23Object;
+        $cvssObject = new CVSS23Object;
         $cvssObject->confidentiality = 0.56;
         $cvssObject->integrity = 0.56;
         $cvssObject->availability = 0.56;
@@ -104,18 +104,18 @@ class Cvss31CalculatorTest extends TestCase
         $this->assertEquals(10.0, $result);
     }
 
-    public function testInvalidCvssObjectBaseScore(): void
+    public function testInvalidCVSSObjectBaseScore(): void
     {
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('Wrong CVSS object');
 
-        $cvssObject = new Cvss4Object('','','','','','');
+        $cvssObject = new CVSS4Object('','','','','','');
         $this->calculator->calculateBaseScore($cvssObject);
     }
 
     public function testImpactScore(): void
     {
-        $cvssObject = new Cvss23Object;
+        $cvssObject = new CVSS23Object;
         $cvssObject->confidentiality = 0.56;
         $cvssObject->integrity = 0.56;
         $cvssObject->availability = 0.56;
@@ -134,7 +134,7 @@ class Cvss31CalculatorTest extends TestCase
 
     public function testTemporalScore(): void
     {
-        $cvssObject = new Cvss23Object;
+        $cvssObject = new CVSS23Object;
         $cvssObject->baseScore = 4.6;
         $cvssObject->exploitCodeMaturity = 0.91;
         $cvssObject->remediationLevel = 0.95;
@@ -145,18 +145,18 @@ class Cvss31CalculatorTest extends TestCase
         $this->assertEquals(3.9, $result);
     }
 
-    public function testInvalidCvssObjectTemporalScore(): void
+    public function testInvalidCVSSObjectTemporalScore(): void
     {
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('Wrong CVSS object');
 
-        $cvssObject = new Cvss4Object('','','','','','');
+        $cvssObject = new CVSS4Object('','','','','','');
         $this->calculator->calculateTemporalScore($cvssObject);
     }
 
     public function testEnvironmentalScoreUnchangedScope(): void
     {
-        $cvssObject = new Cvss23Object;
+        $cvssObject = new CVSS23Object;
         $cvssObject->exploitCodeMaturity = 0.91;
         $cvssObject->remediationLevel = 0.95;
         $cvssObject->reportConfidence = 0.96;
@@ -178,7 +178,7 @@ class Cvss31CalculatorTest extends TestCase
 
     public function testEnvironmentalScoreUnchangedScopeMax(): void
     {
-        $cvssObject = new Cvss23Object;
+        $cvssObject = new CVSS23Object;
         $cvssObject->exploitCodeMaturity = 1;
         $cvssObject->remediationLevel = 1;
         $cvssObject->reportConfidence = 1;
@@ -200,7 +200,7 @@ class Cvss31CalculatorTest extends TestCase
 
     public function testEnvironmentalScoreUnchangedScopeOverflow(): void
     {
-        $cvssObject = new Cvss23Object;
+        $cvssObject = new CVSS23Object;
         $cvssObject->exploitCodeMaturity = 1;
         $cvssObject->remediationLevel = 1;
         $cvssObject->reportConfidence = 1;
@@ -222,7 +222,7 @@ class Cvss31CalculatorTest extends TestCase
 
     public function testEnvironmentalScoreChangedScope(): void
     {
-        $cvssObject = new Cvss23Object;
+        $cvssObject = new CVSS23Object;
         $cvssObject->exploitCodeMaturity = 0.91;
         $cvssObject->remediationLevel = 0.95;
         $cvssObject->reportConfidence = 0.96;
@@ -244,7 +244,7 @@ class Cvss31CalculatorTest extends TestCase
 
     public function testEnvironmentalScoreChangedScopeMax(): void
     {
-        $cvssObject = new Cvss23Object;
+        $cvssObject = new CVSS23Object;
         $cvssObject->exploitCodeMaturity = 1;
         $cvssObject->remediationLevel = 1;
         $cvssObject->reportConfidence = 1;
@@ -266,7 +266,7 @@ class Cvss31CalculatorTest extends TestCase
 
     public function testEnvironmentalScoreChangedScopeOverflow(): void
     {
-        $cvssObject = new Cvss23Object;
+        $cvssObject = new CVSS23Object;
         $cvssObject->exploitCodeMaturity = 1;
         $cvssObject->remediationLevel = 1;
         $cvssObject->reportConfidence = 1;
@@ -286,30 +286,30 @@ class Cvss31CalculatorTest extends TestCase
         $this->assertEquals(10, $result);
     }
 
-    public function testInvalidCvssObjectEnvironmentalScore(): void
+    public function testInvalidCVSSObjectEnvironmentalScore(): void
     {
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('Wrong CVSS object');
 
-        $cvssObject = new Cvss4Object('','','','','','');
+        $cvssObject = new CVSS4Object('','','','','','');
         $this->calculator->calculateEnvironmentalScore($cvssObject);
     }
 
-    public function testInvalidCvssObjectCalculateModifiedImpactSubScore(): void
+    public function testInvalidCVSSObjectCalculateModifiedImpactSubScore(): void
     {
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('Wrong CVSS object');
 
-        $cvssObject = new Cvss4Object('','','','','','');
+        $cvssObject = new CVSS4Object('','','','','','');
         $this->calculator->calculateModifiedImpactSubScore($cvssObject);
     }
 
-    public function testInvalidCvssObjectCalculateModifiedImpact(): void
+    public function testInvalidCVSSObjectCalculateModifiedImpact(): void
     {
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('Wrong CVSS object');
 
-        $cvssObject = new Cvss4Object('','','','','','');
+        $cvssObject = new CVSS4Object('','','','','','');
         $this->calculator->calculateModifiedImpact($cvssObject);
     }
 }

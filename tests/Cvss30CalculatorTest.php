@@ -2,31 +2,31 @@
 
 declare(strict_types=1);
 
-namespace Rootshell\Cvss\Test;
+namespace Rootshell\CVSS\Test;
 
 use PHPUnit\Framework\TestCase;
-use Rootshell\Cvss\Calculators\Cvss30Calculator;
-use Rootshell\Cvss\Calculators\Cvss31Calculator;
-use Rootshell\Cvss\ValueObjects\Cvss23Object;
-use Rootshell\Cvss\ValueObjects\Cvss4Object;
+use Rootshell\CVSS\Calculators\CVSS30Calculator;
+use Rootshell\CVSS\Calculators\CVSS31Calculator;
+use Rootshell\CVSS\ValueObjects\CVSS23Object;
+use Rootshell\CVSS\ValueObjects\CVSS4Object;
 
-class Cvss30CalculatorTest  extends TestCase
+class CVSS30CalculatorTest  extends TestCase
 {
 
-    private Cvss30Calculator $calculator;
+    private CVSS30Calculator $calculator;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->calculator = new Cvss30Calculator();
+        $this->calculator = new CVSS30Calculator();
     }
 
-    public function testCalculateModifiedImpactSubScoreInvalidCvssObject(): void
+    public function testCalculateModifiedImpactSubScoreInvalidCVSSObject(): void
     {
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('Wrong CVSS object');
 
-        $cvssObject = new Cvss4Object('','','','','','');
+        $cvssObject = new CVSS4Object('','','','','','');
         $this->calculator->calculateModifiedImpactSubScore($cvssObject);
     }
 
@@ -35,7 +35,7 @@ class Cvss30CalculatorTest  extends TestCase
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('Wrong CVSS object');
 
-        $cvssObject = new Cvss4Object('','','','','','');
+        $cvssObject = new CVSS4Object('','','','','','');
         $this->calculator->calculateModifiedImpact($cvssObject);
     }
 }

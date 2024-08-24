@@ -1,22 +1,22 @@
 <?php
 
-namespace Rootshell\Cvss\Test;
+namespace Rootshell\CVSS\Test;
 
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 use ReflectionMethod;
-use Rootshell\Cvss\Exceptions\CvssException;
-use Rootshell\Cvss\Parsers\Cvss2Parser;
-use Rootshell\Cvss\ValueObjects\Cvss23Object;
+use Rootshell\CVSS\Exceptions\CVSSException;
+use Rootshell\CVSS\Parsers\CVSS2Parser;
+use Rootshell\CVSS\ValueObjects\CVSS23Object;
 
-class Cvss2ParserTest extends TestCase
+class CVSS2ParserTest extends TestCase
 {
-    private Cvss2Parser $parser;
+    private CVSS2Parser $parser;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->parser = new Cvss2Parser();
+        $this->parser = new CVSS2Parser();
     }
 
     /**
@@ -99,7 +99,7 @@ class Cvss2ParserTest extends TestCase
     public function testInvalidParseMethodsValid(string $methodName, ?string $metricValue): void
     {
         $method = self::getMethod($methodName);
-        $this->expectException(CvssException::class);
+        $this->expectException(CVSSException::class);
         $method->invokeArgs($this->parser, [$metricValue]);
     }
 
@@ -120,7 +120,7 @@ class Cvss2ParserTest extends TestCase
     public function testParseBaseValues(): void
     {
         $method = self::getMethod('parseBaseValues');
-        $result = $method->invokeArgs($this->parser, ['CVSS:2/AV:N/AC:M/Au:M/C:C/I:P/A:N', new Cvss23Object]);
+        $result = $method->invokeArgs($this->parser, ['CVSS:2/AV:N/AC:M/Au:M/C:C/I:P/A:N', new CVSS23Object]);
 
         self::assertEquals(1.0, $result->accessVector);
         self::assertEquals(0.61, $result->accessComplexity);
@@ -133,7 +133,7 @@ class Cvss2ParserTest extends TestCase
     public function testParseTemporalValues(): void
     {
         $method = self::getMethod('parseTemporalValues');
-        $result = $method->invokeArgs($this->parser, ['CVSS:2/AV:N/AC:M/Au:M/C:C/I:P/A:N/E:POC/RL:OF/RC:C', new Cvss23Object]);
+        $result = $method->invokeArgs($this->parser, ['CVSS:2/AV:N/AC:M/Au:M/C:C/I:P/A:N/E:POC/RL:OF/RC:C', new CVSS23Object]);
 
         self::assertEquals(0.9, $result->exploitability);
         self::assertEquals(0.87, $result->remediationLevel);
@@ -147,7 +147,7 @@ class Cvss2ParserTest extends TestCase
             $this->parser,
             [
                 'CVSS:2/AV:N/AC:M/Au:M/C:C/I:P/A:N/E:POC/RL:OF/RC:C/CDP:MH/TD:L/CR:ND/IR:L/AR:H',
-                new Cvss23Object,
+                new CVSS23Object,
             ]
         );
 
@@ -182,7 +182,7 @@ class Cvss2ParserTest extends TestCase
 
     public function testFindValueInVectorFail(): void
     {
-        $this->expectException(CvssException::class);
+        $this->expectException(CVSSException::class);
 
         $method = self::getMethod('findValueInVector');
         $method->invokeArgs(
@@ -196,7 +196,7 @@ class Cvss2ParserTest extends TestCase
 
     protected static function getMethod($name): ReflectionMethod
     {
-        $class = new ReflectionClass(Cvss2Parser::class);
+        $class = new ReflectionClass(CVSS2Parser::class);
         $method = $class->getMethod($name);
         $method->setAccessible(true);
         return $method;

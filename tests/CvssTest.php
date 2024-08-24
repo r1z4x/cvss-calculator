@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Rootshell\Cvss\Test;
+namespace Rootshell\CVSS\Test;
 
 use PHPUnit\Framework\TestCase;
-use Rootshell\Cvss\Cvss;
-use Rootshell\Cvss\Exceptions\CvssException;
+use Rootshell\CVSS\CVSS;
+use Rootshell\CVSS\Exceptions\CVSSException;
 
-class CvssTest extends TestCase
+class CVSSTest extends TestCase
 {
 
     /**
@@ -16,7 +16,7 @@ class CvssTest extends TestCase
      */
     public function testGenerateScores(string $vector, float $baseScore, float $temporalScore, float $environmentScore): void
     {
-        $result = Cvss::generateScores($vector);
+        $result = CVSS::generateScores($vector);
 
         self::assertEquals($baseScore, $result->baseScore);
         self::assertEquals($temporalScore, $result->temporalScore);
@@ -85,15 +85,15 @@ class CvssTest extends TestCase
      */
     public function testInvalidCalculator(int|float $version): void
     {
-        $this->expectExceptionCode(CvssException::class);
+        $this->expectExceptionCode(CVSSException::class);
         $this->expectExceptionMessage('The vector you have provided is invalid');
         $this->expectExceptionCode(403);
 
-        $reflectCvss = new \ReflectionClass(Cvss::class);
-        $method = $reflectCvss->getMethod('buildCalculator');
+        $reflectCVSS = new \ReflectionClass(CVSS::class);
+        $method = $reflectCVSS->getMethod('buildCalculator');
         $method->setAccessible(true);
 
-        $cvs = new Cvss();
+        $cvs = new CVSS();
         $method->invokeArgs($cvs, ['version' => $version]);
     }
 
@@ -717,10 +717,10 @@ class CvssTest extends TestCase
     public function testValidation(string $vector, bool $valid): void
     {
         if (!$valid) {
-            $this->expectException(CvssException::class);
+            $this->expectException(CVSSException::class);
         }
 
-        $result = Cvss::generateScores($vector);
+        $result = CVSS::generateScores($vector);
 
         if ($valid) {
             $this->assertNotNull($result->baseScore);

@@ -1,8 +1,8 @@
 <?php
 
-namespace Rootshell\Cvss\ValueObjects;
+namespace Rootshell\CVSS\ValueObjects;
 
-class Cvss4Object extends CvssObject
+class CVSS4Object extends CVSSObject
 {
     public function __construct(
         public string $eq1,

@@ -1,21 +1,21 @@
 <?php
 
-namespace Rootshell\Cvss;
+namespace Rootshell\CVSS;
 
-use Rootshell\Cvss\Calculators\Cvss2Calculator;
-use Rootshell\Cvss\Calculators\Cvss30Calculator;
-use Rootshell\Cvss\Calculators\Cvss31Calculator;
-use Rootshell\Cvss\Calculators\Cvss40Calculator;
-use Rootshell\Cvss\Calculators\CvssCalculator;
-use Rootshell\Cvss\Exceptions\CvssException;
-use Rootshell\Cvss\Parsers\Cvss2Parser;
-use Rootshell\Cvss\Parsers\Cvss31Parser;
-use Rootshell\Cvss\Parsers\Cvss40Parser;
-use Rootshell\Cvss\ValueObjects\Cvss23Object;
-use Rootshell\Cvss\ValueObjects\CvssObject;
-use Rootshell\Cvss\ValueObjects\CvssResults;
+use Rootshell\CVSS\Calculators\CVSS2Calculator;
+use Rootshell\CVSS\Calculators\CVSS30Calculator;
+use Rootshell\CVSS\Calculators\CVSS31Calculator;
+use Rootshell\CVSS\Calculators\CVSS40Calculator;
+use Rootshell\CVSS\Calculators\CVSSCalculator;
+use Rootshell\CVSS\Exceptions\CVSSException;
+use Rootshell\CVSS\Parsers\CVSS2Parser;
+use Rootshell\CVSS\Parsers\CVSS31Parser;
+use Rootshell\CVSS\Parsers\CVSS40Parser;
+use Rootshell\CVSS\ValueObjects\CVSS23Object;
+use Rootshell\CVSS\ValueObjects\CVSSObject;
+use Rootshell\CVSS\ValueObjects\CVSSResults;
 
-class Cvss
+class CVSS
 {
     private const V4_VALIDATION_REGEX = '/^CVSS:4.0\/AV:[NALP]\/AC:[LH]\/AT:[NP]\/PR:[NLH]\/UI:[NPA]\/VC:[NLH]\/VI:[NLH]\/VA:[NLH]\/SC:[NLH]\/SI:[NLH]\/SA:[NLH]/';
     private const V4_VALIDATION_REGEX_OPTIONALS = '/\/S:[^NP{1}|\s]|\/AU:[^YN{1}\s]|\/R:[^AIU{1}|\s]|\/V:[^CD|\s]|\/RE:[^LMH{1}|\s]|\/U:[^CGAR{1}|\s]|'
@@ -38,6 +38,7 @@ class Cvss
         $cvssObject->baseScore = $calculator->calculateBaseScore($cvssObject);
         $cvssObject->temporalScore = $calculator->calculateTemporalScore($cvssObject);
         $cvssObject->environmentalScore = $calculator->calculateEnvironmentalScore($cvssObject);
+        $cvssObject->severity = $calculator->calculateSeverity($cvssObject);
 
         return $cvssObject->getResults();
     }

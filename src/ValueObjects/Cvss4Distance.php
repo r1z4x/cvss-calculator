@@ -1,8 +1,8 @@
 <?php
 
-namespace Rootshell\Cvss\ValueObjects;
+namespace Rootshell\CVSS\ValueObjects;
 
-class Cvss4Distance
+class CVSS4Distance
 {
     public function __construct(
         public float $eqOne = 0.0,

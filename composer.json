@@ -29,12 +29,12 @@
   },
   "autoload": {
     "psr-4": {
-      "Rootshell\\Cvss\\": "src/"
+      "Rootshell\\CVSS\\": "src/"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "Rootshell\\Cvss\\Test\\": "tests/"
+      "Rootshell\\CVSS\\Test\\": "tests/"
     }
   },
   "scripts": {

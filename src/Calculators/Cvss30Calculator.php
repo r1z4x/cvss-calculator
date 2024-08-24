@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace Rootshell\Cvss\Calculators;
+namespace Rootshell\CVSS\Calculators;
 
 use http\Exception\RuntimeException;
-use Rootshell\Cvss\ValueObjects\Cvss23Object;
-use Rootshell\Cvss\ValueObjects\CvssObject;
+use Rootshell\CVSS\ValueObjects\CVSS23Object;
+use Rootshell\CVSS\ValueObjects\CVSSObject;
 
-class Cvss30Calculator extends AbstractCvss3Calculator
+class CVSS30Calculator extends AbstractCVSS3Calculator
 {
-    public function calculateModifiedImpactSubScore(CvssObject $cvssObject): float
+    public function calculateModifiedImpactSubScore(CVSSObject $cvssObject): float
     {
-        if (!$cvssObject instanceof Cvss23Object) {
+        if (!$cvssObject instanceof CVSS23Object) {
             throw new \RuntimeException('Wrong CVSS object');
         }
 
@@ -24,13 +24,13 @@ class Cvss30Calculator extends AbstractCvss3Calculator
         );
     }
 
-    public function calculateModifiedImpact(CvssObject $cvssObject): float
+    public function calculateModifiedImpact(CVSSObject $cvssObject): float
     {
-        if (!$cvssObject instanceof Cvss23Object) {
+        if (!$cvssObject instanceof CVSS23Object) {
             throw new \RuntimeException('Wrong CVSS object');
         }
 
-        if ($cvssObject->modifiedScope === Cvss23Object::SCOPE_UNCHANGED) {
+        if ($cvssObject->modifiedScope === CVSS23Object::SCOPE_UNCHANGED) {
             return 6.42 * $cvssObject->modifiedImpactSubScore;
         }
 
@@ -40,5 +40,19 @@ class Cvss30Calculator extends AbstractCvss3Calculator
     public function roundUp(float $number): float
     {
         return round(ceil($number * 10) / 10, 1);
+    }
+
+    public function calculateSeverity(CVSSObject $cvssObject): string
+    {
+        $baseScore = $this->calculateBaseScore($cvssObject);
+
+        return match (true) {
+            $baseScore >= 9.0 => 'C',
+            $baseScore >= 7.0 => 'H',
+            $baseScore >= 4.0 => 'M',
+            $baseScore >= 0.1 => 'L',
+            $baseScore === 0.0 => 'N',
+            default => 'N/A',
+        };
     }
 }

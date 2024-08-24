@@ -1,21 +1,21 @@
 <?php
 
-namespace Rootshell\Cvss\Test;
+namespace Rootshell\CVSS\Test;
 
 use PHPUnit\Framework\TestCase;
-use Rootshell\Cvss\Calculators\Cvss2Calculator;
-use Rootshell\Cvss\ValueObjects\Cvss23Object;
-use Rootshell\Cvss\ValueObjects\Cvss4Object;
+use Rootshell\CVSS\Calculators\CVSS2Calculator;
+use Rootshell\CVSS\ValueObjects\CVSS23Object;
+use Rootshell\CVSS\ValueObjects\CVSS4Object;
 
-class Cvss2CalculatorTest extends TestCase
+class CVSS2CalculatorTest extends TestCase
 {
 
-    private Cvss2Calculator $calculator;
+    private CVSS2Calculator $calculator;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->calculator = new Cvss2Calculator;
+        $this->calculator = new CVSS2Calculator;
     }
 
 
@@ -31,7 +31,7 @@ class Cvss2CalculatorTest extends TestCase
         float $availability,
         float $expectedResult
     ): void {
-        $cvssObject = new Cvss23Object;
+        $cvssObject = new CVSS23Object;
         $cvssObject->accessVector = $accessVector;
         $cvssObject->accessComplexity = $accessComplexity;
         $cvssObject->authentication = $authentication;
@@ -52,12 +52,12 @@ class Cvss2CalculatorTest extends TestCase
         ];
     }
 
-    public function testInvalidCvssObjectBaseScore(): void
+    public function testInvalidCVSSObjectBaseScore(): void
     {
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('Wrong CVSS object');
 
-        $cvssObject = new Cvss4Object('','','','','','');
+        $cvssObject = new CVSS4Object('','','','','','');
         $this->calculator->calculateBaseScore($cvssObject);
     }
 
@@ -71,7 +71,7 @@ class Cvss2CalculatorTest extends TestCase
         float $reportConfidence,
         float $expectedResult
     ): void {
-        $cvssObject = new Cvss23Object;
+        $cvssObject = new CVSS23Object;
         $cvssObject->baseScore = $baseScore;
         $cvssObject->exploitability = $exploitability;
         $cvssObject->remediationLevel = $remediationLevel;
@@ -90,18 +90,18 @@ class Cvss2CalculatorTest extends TestCase
         ];
     }
 
-    public function testInvalidCvssObjectTemporalScore(): void
+    public function testInvalidCVSSObjectTemporalScore(): void
     {
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('Wrong CVSS object');
 
-        $cvssObject = new Cvss4Object('','','','','','');
+        $cvssObject = new CVSS4Object('','','','','','');
         $this->calculator->calculateTemporalScore($cvssObject);
     }
 
     public function testCalculateEnvironmentalScore(): void
     {
-        $cvssObject = new Cvss23Object;
+        $cvssObject = new CVSS23Object;
         $cvssObject->accessVector = 1.00;
         $cvssObject->accessComplexity = 0.71;
         $cvssObject->authentication = 0.704;
@@ -125,12 +125,12 @@ class Cvss2CalculatorTest extends TestCase
         self::assertEquals(9.0, $result);
     }
 
-    public function testInvalidCvssObjectEnvironmentalScore(): void
+    public function testInvalidCVSSObjectEnvironmentalScore(): void
     {
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('Wrong CVSS object');
 
-        $cvssObject = new Cvss4Object('','','','','','');
+        $cvssObject = new CVSS4Object('','','','','','');
         $this->calculator->calculateEnvironmentalScore($cvssObject);
     }
 }

@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Rootshell\Cvss\Parsers;
+namespace Rootshell\CVSS\Parsers;
 
-use Rootshell\Cvss\Exceptions\CvssException;
-use Rootshell\Cvss\ValueObjects\Cvss23Object;
+use Rootshell\CVSS\Exceptions\CVSSException;
+use Rootshell\CVSS\ValueObjects\CVSS23Object;
 
-class Cvss31Parser
+class CVSS31Parser
 {
     private const NETWORK = 'N';
     private const ADJACENT = 'A';
@@ -60,9 +60,9 @@ class Cvss31Parser
     private const ENVIRONMENTAL_MODIFIED_INTEGRITY = 'MI';
     private const ENVIRONMENTAL_MODIFIED_AVAILABILITY = 'MA';
 
-    public static function parseVector(string $vector): Cvss23Object
+    public static function parseVector(string $vector): CVSS23Object
     {
-        $cvssObject = new Cvss23Object();
+        $cvssObject = new CVSS23Object();
         $cvssObject = self::parseBaseValues($vector, $cvssObject);
         $cvssObject = self::parseTemporalValues($vector, $cvssObject);
         $cvssObject = self::parseEnvironmentalValues($vector, $cvssObject);
@@ -70,7 +70,7 @@ class Cvss31Parser
         return $cvssObject;
     }
 
-    private static function parseBaseValues(string $vector, Cvss23Object $cvssObject): Cvss23Object
+    private static function parseBaseValues(string $vector, CVSS23Object $cvssObject): CVSS23Object
     {
         $cvssObject->modifiedScope = $cvssObject->scope = self::findValueInVector($vector, self::BASE_SCOPE);
         $cvssObject->modifiedAttackVector = $cvssObject->attackVector = self::parseAttackVector(self::findValueInVector($vector, self::BASE_ATTACK_VECTOR));
@@ -84,7 +84,7 @@ class Cvss31Parser
         return $cvssObject;
     }
 
-    private static function parseTemporalValues(string $vector, Cvss23Object $cvssObject): Cvss23Object
+    private static function parseTemporalValues(string $vector, CVSS23Object $cvssObject): CVSS23Object
     {
         $cvssObject->exploitCodeMaturity = self::parseExploitCodeMaturity(self::findOptionalValueInVector($vector, self::TEMPORAL_EXPLOIT_CODE_MATURITY));
         $cvssObject->remediationLevel = self::parseRemediationLevel(self::findOptionalValueInVector($vector, self::TEMPORAL_REMEDIATION_LEVEL));
@@ -93,7 +93,7 @@ class Cvss31Parser
         return $cvssObject;
     }
 
-    private static function parseEnvironmentalValues(string $vector, Cvss23Object $cvssObject): Cvss23Object
+    private static function parseEnvironmentalValues(string $vector, CVSS23Object $cvssObject): CVSS23Object
     {
         $modifiedScopeValue = self::findOptionalValueInVector($vector, self::ENVIRONMENTAL_MODIFIED_SCOPE);
 
@@ -150,7 +150,7 @@ class Cvss31Parser
         preg_match($regex, $vector, $matches);
 
         if (!isset($matches[0])) {
-            throw CvssException::missingValue();
+            throw CVSSException::missingValue();
         }
 
         return $matches[0];
@@ -171,7 +171,7 @@ class Cvss31Parser
             self::ADJACENT => 0.62,
             self::LOCAL => 0.55,
             self::PHYSICAL => 0.2,
-            default => throw CvssException::invalidValue(),
+            default => throw CVSSException::invalidValue(),
         };
     }
 
@@ -180,7 +180,7 @@ class Cvss31Parser
         return match ($value) {
             self::LOW => 0.77,
             self::HIGH => 0.44,
-            default => throw CvssException::invalidValue(),
+            default => throw CVSSException::invalidValue(),
         };
     }
 
@@ -188,9 +188,9 @@ class Cvss31Parser
     {
         return match ($value) {
             self::NONE => 0.85,
-            self::LOW => $scope === Cvss23Object::SCOPE_UNCHANGED ? 0.62 : 0.68,
-            self::HIGH => $scope === Cvss23Object::SCOPE_UNCHANGED ? 0.27 : 0.5,
-            default => throw CvssException::invalidValue(),
+            self::LOW => $scope === CVSS23Object::SCOPE_UNCHANGED ? 0.62 : 0.68,
+            self::HIGH => $scope === CVSS23Object::SCOPE_UNCHANGED ? 0.27 : 0.5,
+            default => throw CVSSException::invalidValue(),
         };
     }
 
@@ -199,7 +199,7 @@ class Cvss31Parser
         return match ($value) {
             self::NONE => 0.85,
             self::REQUIRED => 0.62,
-            default => throw CvssException::invalidValue(),
+            default => throw CVSSException::invalidValue(),
         };
     }
 
@@ -209,7 +209,7 @@ class Cvss31Parser
             self::HIGH => 0.56,
             self::LOW => 0.22,
             self::NONE => 0,
-            default => throw CvssException::invalidValue(),
+            default => throw CVSSException::invalidValue(),
         };
     }
 

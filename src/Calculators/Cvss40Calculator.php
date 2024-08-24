@@ -1,15 +1,15 @@
 <?php
 
-namespace Rootshell\Cvss\Calculators;
+namespace Rootshell\CVSS\Calculators;
 
 use http\Exception\RuntimeException;
 use LanguageServerProtocol\PackageDescriptor;
-use Rootshell\Cvss\Parsers\Cvss40Parser;
-use Rootshell\Cvss\ValueObjects\Cvss4Distance;
-use Rootshell\Cvss\ValueObjects\Cvss4Object;
-use Rootshell\Cvss\ValueObjects\CvssObject;
+use Rootshell\CVSS\Parsers\CVSS40Parser;
+use Rootshell\CVSS\ValueObjects\CVSS4Distance;
+use Rootshell\CVSS\ValueObjects\CVSS4Object;
+use Rootshell\CVSS\ValueObjects\CVSSObject;
 
-class Cvss40Calculator implements CvssCalculator
+class CVSS40Calculator implements CVSSCalculator
 {
     private array $vectorLookup = [
         '000000' => 10.0,
@@ -338,9 +338,9 @@ class Cvss40Calculator implements CvssCalculator
         ],
     ];
 
-    public function calculateBaseScore(CvssObject $cvssObject): float
+    public function calculateBaseScore(CVSSObject $cvssObject): float
     {
-        if (!$cvssObject instanceof Cvss4Object) {
+        if (!$cvssObject instanceof CVSS4Object) {
             throw new \RuntimeException('Wrong CVSS object');
         }
 
@@ -395,12 +395,12 @@ class Cvss40Calculator implements CvssCalculator
         return round($finalValue, 1);
     }
 
-    public function calculateTemporalScore(CvssObject $cvssObject): float
+    public function calculateTemporalScore(CVSSObject $cvssObject): float
     {
         return $this->calculateBaseScore($cvssObject);
     }
 
-    public function calculateEnvironmentalScore(CvssObject $cvssObject): float
+    public function calculateEnvironmentalScore(CVSSObject $cvssObject): float
     {
         return $this->calculateBaseScore($cvssObject);
     }
@@ -426,7 +426,7 @@ class Cvss40Calculator implements CvssCalculator
         return $eqSixScore;
     }
 
-    private function getMaxVector(Cvss4Object $cvssObject): Cvss4Object
+    private function getMaxVector(CVSS4Object $cvssObject): CVSS4Object
     {
         if (
             !isset(
@@ -444,7 +444,7 @@ class Cvss40Calculator implements CvssCalculator
         ) {
             throw new \RuntimeException('Error');
         }
-        $parser = new Cvss40Parser();
+        $parser = new CVSS40Parser();
 
         /** @var string $eq1Vector */
         foreach ($this->maxComposed[1][$cvssObject->eq1] as $eq1Vector) {
@@ -466,17 +466,17 @@ class Cvss40Calculator implements CvssCalculator
             }
         }
 
-        return new Cvss4Object('', '', '', '', '', '');
+        return new CVSS4Object('', '', '', '', '', '');
     }
 
     /**
      * @param float $initalValue
      * @param float[]|null[] $lowerValues
-     * @return Cvss4Distance
+     * @return CVSS4Distance
      */
-    private function calculateAvailableDistance(float $initalValue, array $lowerValues): Cvss4Distance
+    private function calculateAvailableDistance(float $initalValue, array $lowerValues): CVSS4Distance
     {
-        $availableDistance = new Cvss4Distance();
+        $availableDistance = new CVSS4Distance();
 
         if (!is_null($lowerValues[1])) {
             $availableDistance->eqOne = $initalValue - $lowerValues[1];
@@ -497,9 +497,9 @@ class Cvss40Calculator implements CvssCalculator
         return $availableDistance;
     }
 
-    private function calculateSeverityDistance(Cvss4Object $cvssObject, Cvss4Object $maxVector): Cvss4Distance
+    private function calculateSeverityDistance(CVSS4Object $cvssObject, CVSS4Object $maxVector): CVSS4Distance
     {
-        return new Cvss4Distance(
+        return new CVSS4Distance(
             eqOne: $maxVector->getSeverityDistanceAV($cvssObject) +
             $maxVector->getSeverityDistancePR($cvssObject) +
             $maxVector->getSeverityDistanceUI($cvssObject),
@@ -516,9 +516,9 @@ class Cvss40Calculator implements CvssCalculator
         );
     }
 
-    private function calculateMeanDistance(Cvss4Object $cvssObject, Cvss4Distance $severityDistance, Cvss4Distance $availableDistance): float
+    private function calculateMeanDistance(CVSS4Object $cvssObject, CVSS4Distance $severityDistance, CVSS4Distance $availableDistance): float
     {
-        $normalisedSeverity = new Cvss4Distance();
+        $normalisedSeverity = new CVSS4Distance();
         $existingLower = 0;
 
         if ($availableDistance->eqOne) {
@@ -581,5 +581,19 @@ class Cvss40Calculator implements CvssCalculator
                 $normalisedSeverity->eqFour +
                 $normalisedSeverity->eqFive
             ) / $existingLower;
+    }
+
+    public function calculateSeverity(CVSSObject $cvssObject): string
+    {
+        $baseScore = $this->calculateBaseScore($cvssObject);
+
+        return match (true) {
+            $baseScore >= 9.0 => 'C',
+            $baseScore >= 7.0 => 'H',
+            $baseScore >= 4.0 => 'M',
+            $baseScore >= 0.1 => 'L',
+            $baseScore === 0.0 => 'N',
+            default => 'N/A',
+        };
     }
 }

@@ -1,11 +1,11 @@
 <?php
 
-namespace Rootshell\Cvss\Parsers;
+namespace Rootshell\CVSS\Parsers;
 
-use Rootshell\Cvss\Exceptions\CvssException;
-use Rootshell\Cvss\ValueObjects\Cvss23Object;
+use Rootshell\CVSS\Exceptions\CVSSException;
+use Rootshell\CVSS\ValueObjects\CVSS23Object;
 
-class Cvss2Parser
+class CVSS2Parser
 {
     private const NETWORK = 'N';
     private const ADJACENT = 'A';
@@ -57,9 +57,9 @@ class Cvss2Parser
     private const ENVIRONMENTAL_AVAILABILITY_REQUIREMENT = 'AR';
 
 
-    public static function parseVector(string $vector): Cvss23Object
+    public static function parseVector(string $vector): CVSS23Object
     {
-        $cvssObject = new Cvss23Object();
+        $cvssObject = new CVSS23Object();
         $cvssObject = self::parseBaseValues($vector, $cvssObject);
         $cvssObject = self::parseTemporalValues($vector, $cvssObject);
         $cvssObject = self::parseEnvironmentalValues($vector, $cvssObject);
@@ -67,7 +67,7 @@ class Cvss2Parser
         return $cvssObject;
     }
 
-    private static function parseBaseValues(string $vector, Cvss23Object $cvssObject): Cvss23Object
+    private static function parseBaseValues(string $vector, CVSS23Object $cvssObject): CVSS23Object
     {
         $cvssObject->accessVector = self::parseAccessVector(self::findValueInVector($vector, self::BASE_ACCESS_VECTOR));
         $cvssObject->accessComplexity = self::parseAccessComplexity(self::findValueInVector($vector, self::BASE_ATTACK_COMPLEXITY));
@@ -78,7 +78,7 @@ class Cvss2Parser
         return $cvssObject;
     }
 
-    private static function parseTemporalValues(string $vector, Cvss23Object $cvssObject): Cvss23Object
+    private static function parseTemporalValues(string $vector, CVSS23Object $cvssObject): CVSS23Object
     {
         $cvssObject->exploitability = self::parseExploitability(self::findOptionalValueInVector($vector, self::TEMPORAL_EXPLOITABILITY));
         $cvssObject->remediationLevel = self::parseRemediationLevel(self::findOptionalValueInVector($vector, self::TEMPORAL_REMEDIATION_LEVEL));
@@ -87,7 +87,7 @@ class Cvss2Parser
         return $cvssObject;
     }
 
-    private static function parseEnvironmentalValues(string $vector, Cvss23Object $cvssObject): Cvss23Object
+    private static function parseEnvironmentalValues(string $vector, CVSS23Object $cvssObject): CVSS23Object
     {
         $cvssObject->collateralDamagePotential = self::parseCollateralDamagePotential(self::findOptionalValueInVector($vector, self::ENVIRONMENTAL_COLLATERAL_DAMAGE_POTENTIAL));
         $cvssObject->targetDistribution = self::parseTargetDistribution(self::findOptionalValueInVector($vector, self::ENVIRONMENTAL_TARGET_DISTRIBUTION));
@@ -105,7 +105,7 @@ class Cvss2Parser
         preg_match($regex, '/' . $vector, $matches);
 
         if (!isset($matches[0])) {
-            throw CvssException::missingValue();
+            throw CVSSException::missingValue();
         }
 
         return $matches[0];
@@ -125,7 +125,7 @@ class Cvss2Parser
             self::NETWORK => 1,
             self::ADJACENT => 0.646,
             self::LOCAL => 0.395,
-            default => throw CvssException::invalidValue(),
+            default => throw CVSSException::invalidValue(),
         };
     }
 
@@ -135,7 +135,7 @@ class Cvss2Parser
             self::HIGH => 0.35,
             self::MEDIUM => 0.61,
             self::LOW => 0.71,
-            default => throw CvssException::invalidValue(),
+            default => throw CVSSException::invalidValue(),
         };
     }
 
@@ -145,7 +145,7 @@ class Cvss2Parser
             self::MULTIPLE => 0.45,
             self::SINGLE => 0.56,
             self::NONE => 0.704,
-            default => throw CvssException::invalidValue(),
+            default => throw CVSSException::invalidValue(),
         };
     }
 
@@ -155,7 +155,7 @@ class Cvss2Parser
             self::COMPLETE => 0.660,
             self::PARTIAL => 0.275,
             self::NONE => 0.0,
-            default => throw CvssException::invalidValue(),
+            default => throw CVSSException::invalidValue(),
         };
     }
 

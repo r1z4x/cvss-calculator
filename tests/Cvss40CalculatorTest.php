@@ -2,33 +2,33 @@
 
 declare(strict_types=1);
 
-namespace Rootshell\Cvss\Test;
+namespace Rootshell\CVSS\Test;
 
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 use ReflectionMethod;
-use Rootshell\Cvss\Calculators\Cvss40Calculator;
-use Rootshell\Cvss\ValueObjects\Cvss23Object;
-use Rootshell\Cvss\ValueObjects\Cvss4Object;
+use Rootshell\CVSS\Calculators\CVSS40Calculator;
+use Rootshell\CVSS\ValueObjects\CVSS23Object;
+use Rootshell\CVSS\ValueObjects\CVSS4Object;
 
-class Cvss40CalculatorTest extends TestCase
+class CVSS40CalculatorTest extends TestCase
 {
 
-    private Cvss40Calculator $calculator;
+    private CVSS40Calculator $calculator;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->calculator = new Cvss40Calculator;
+        $this->calculator = new CVSS40Calculator;
     }
 
 
-    public function testInvalidCvssObject(): void
+    public function testInvalidCVSSObject(): void
     {
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('Wrong CVSS object');
 
-        $cvssObject = new Cvss23Object();
+        $cvssObject = new CVSS23Object();
 
         $this->calculator->calculateBaseScore($cvssObject);
     }
@@ -39,14 +39,14 @@ class Cvss40CalculatorTest extends TestCase
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('Invalid initial value');
 
-        $cvssObject = new Cvss4Object('2','8', '0', '1', '2', '3');
+        $cvssObject = new CVSS4Object('2','8', '0', '1', '2', '3');
 
         $this->calculator->calculateBaseScore($cvssObject);
     }
     
     protected static function getMethod($name): ReflectionMethod
     {
-        $class = new ReflectionClass(Cvss40Calculator::class);
+        $class = new ReflectionClass(CVSS40Calculator::class);
         $method = $class->getMethod($name);
         $method->setAccessible(true);
         return $method;

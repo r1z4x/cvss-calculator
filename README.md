@@ -30,8 +30,8 @@ The Cvss calculator can be called statically and pass a CVSS string. A CvssResul
 If the vector is invalid A CvssException will be thrown. 
 
 ```php
-use Rootshell\Cvss\Cvss;
-use Rootshell\Cvss\Exceptions\CvssException;
+use Rootshell\CVSS\CVSS;
+use Rootshell\CVSS\Exceptions\CVSSException;
 
 try {
 $result = Cvss::generateScores('CVSS:3.1/AV:A/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H');

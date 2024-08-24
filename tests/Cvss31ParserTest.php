@@ -2,23 +2,23 @@
 
 declare(strict_types=1);
 
-namespace Rootshell\Cvss\Test;
+namespace Rootshell\CVSS\Test;
 
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 use ReflectionMethod;
-use Rootshell\Cvss\Exceptions\CvssException;
-use Rootshell\Cvss\Parsers\Cvss31Parser;
-use Rootshell\Cvss\ValueObjects\Cvss23Object;
+use Rootshell\CVSS\Exceptions\CVSSException;
+use Rootshell\CVSS\Parsers\CVSS31Parser;
+use Rootshell\CVSS\ValueObjects\CVSS23Object;
 
-class Cvss31ParserTest extends TestCase
+class CVSS31ParserTest extends TestCase
 {
-    private Cvss31Parser $parser;
+    private CVSS31Parser $parser;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->parser = new Cvss31Parser;
+        $this->parser = new CVSS31Parser;
     }
 
     /**
@@ -85,7 +85,7 @@ class Cvss31ParserTest extends TestCase
     public function testInvalidParseMethodsValid(string $methodName, ?string $metricValue): void
     {
         $method = self::getMethod($methodName);
-        $this->expectException(CvssException::class);
+        $this->expectException(CVSSException::class);
         $method->invokeArgs($this->parser, [$metricValue]);
     }
 
@@ -105,7 +105,7 @@ class Cvss31ParserTest extends TestCase
 
     public function testInvalidPrivilegesRequired(): void
     {
-        $this->expectException(CvssException::class);
+        $this->expectException(CVSSException::class);
         $method = self::getMethod('parsePrivilegesRequired');
         $method->invokeArgs($this->parser, ['R', 'U']);
     }
@@ -136,7 +136,7 @@ class Cvss31ParserTest extends TestCase
     public function testParseBaseValues(): void
     {
         $method = self::getMethod('parseBaseValues');
-        $result = $method->invokeArgs($this->parser, ['CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:L/A:N', new Cvss23Object]);
+        $result = $method->invokeArgs($this->parser, ['CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:L/A:N', new CVSS23Object]);
 
         self::assertEquals(0.85, $result->attackVector);
         self::assertEquals(0.44, $result->attackComplexity);
@@ -151,7 +151,7 @@ class Cvss31ParserTest extends TestCase
     public function testParseTemporalValues(): void
     {
         $method = self::getMethod('parseTemporalValues');
-        $result = $method->invokeArgs($this->parser, ['CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:H/A:H/E:H/RL:T/RC:C', new Cvss23Object]);
+        $result = $method->invokeArgs($this->parser, ['CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:H/A:H/E:H/RL:T/RC:C', new CVSS23Object]);
 
         self::assertEquals(1, $result->exploitCodeMaturity);
         self::assertEquals(0.96, $result->remediationLevel);
@@ -165,7 +165,7 @@ class Cvss31ParserTest extends TestCase
             $this->parser,
             [
                 'CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:H/A:H/E:H/RL:T/RC:C/CR:M/IR:L/AR:H/MAV:A/MAC:L/MPR:N/MUI:R/MS:C/MC:H/MI:L/MA:N',
-                new Cvss23Object,
+                new CVSS23Object,
             ]
         );
 
@@ -184,7 +184,7 @@ class Cvss31ParserTest extends TestCase
 
     public function testParseVectorFull(): void
     {
-        $result = Cvss31Parser::parseVector('CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:H/A:H/E:H/RL:T/RC:C/CR:M/IR:L/AR:H/MAV:A/MAC:L/MPR:N/MUI:R/MS:C/MC:H/MI:L/MA:N');
+        $result = CVSS31Parser::parseVector('CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:H/A:H/E:H/RL:T/RC:C/CR:M/IR:L/AR:H/MAV:A/MAC:L/MPR:N/MUI:R/MS:C/MC:H/MI:L/MA:N');
 
         self::assertEquals(0.85, $result->attackVector);
         self::assertEquals(0.44, $result->attackComplexity);
@@ -214,7 +214,7 @@ class Cvss31ParserTest extends TestCase
 
     public function testFindValueInVectorFail(): void
     {
-        $this->expectException(CvssException::class);
+        $this->expectException(CVSSException::class);
 
         $method = self::getMethod('findValueInVector');
         $method->invokeArgs(
@@ -228,7 +228,7 @@ class Cvss31ParserTest extends TestCase
 
     protected static function getMethod($name): ReflectionMethod
     {
-        $class = new ReflectionClass(Cvss31Parser::class);
+        $class = new ReflectionClass(CVSS31Parser::class);
         $method = $class->getMethod($name);
         $method->setAccessible(true);
         return $method;

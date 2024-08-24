@@ -1,20 +1,20 @@
 <?php
 
-namespace Rootshell\Cvss\Test;
+namespace Rootshell\CVSS\Test;
 
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 use ReflectionMethod;
-use Rootshell\Cvss\Exceptions\CvssException;
-use Rootshell\Cvss\Parsers\Cvss40Parser;
+use Rootshell\CVSS\Exceptions\CVSSException;
+use Rootshell\CVSS\Parsers\CVSS40Parser;
 
-class Cvss4ParserTest extends TestCase
+class CVSS4ParserTest extends TestCase
 {
-    private Cvss40Parser $parser;
+    private CVSS40Parser $parser;
     protected function setUp(): void
     {
         parent::setUp();
-        $this->parser = new Cvss40Parser;
+        $this->parser = new CVSS40Parser;
     }
 
     /**
@@ -96,7 +96,7 @@ class Cvss4ParserTest extends TestCase
 
     public function testFindValueInVectorFail(): void
     {
-        $this->expectException(CvssException::class);
+        $this->expectException(CVSSException::class);
 
         $method = self::getMethod('findValueInVector');
         $method->invokeArgs(
@@ -110,7 +110,7 @@ class Cvss4ParserTest extends TestCase
 
     protected static function getMethod($name): ReflectionMethod
     {
-        $class = new ReflectionClass(Cvss40Parser::class);
+        $class = new ReflectionClass(CVSS40Parser::class);
         $method = $class->getMethod($name);
         $method->setAccessible(true);
         return $method;
