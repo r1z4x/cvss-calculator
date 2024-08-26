@@ -250,4 +250,20 @@ class CVSS31Parser
             default => 1,
         };
     }
+
+    public static function parseBaseValuesAsArray(string $vector): array
+    {
+        $cvssObject = self::parseVector($vector);
+
+        return [
+            'attackVector' => self::findOptionalValueInVector($vector, self::BASE_ATTACK_VECTOR),
+            'attackComplexity' => self::findOptionalValueInVector($vector, self::BASE_ATTACK_COMPLEXITY),
+            'privilegesRequired' => self::findOptionalValueInVector($vector, self::BASE_PRIVILEGES_REQUIRED),
+            'userInteraction' => self::findOptionalValueInVector($vector, self::BASE_USER_INTERACTION),
+            'scope' => self::findOptionalValueInVector($vector, self::BASE_SCOPE),
+            'confidentiality' => self::findOptionalValueInVector($vector, self::BASE_CONFIDENTIALITY),
+            'integrity' => self::findOptionalValueInVector($vector, self::BASE_INTEGRITY),
+            'availability' => self::findOptionalValueInVector($vector, self::BASE_AVAILABILITY)
+        ];
+    }
 }

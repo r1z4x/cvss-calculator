@@ -39,6 +39,7 @@ class CVSS
         $cvssObject->temporalScore = $calculator->calculateTemporalScore($cvssObject);
         $cvssObject->environmentalScore = $calculator->calculateEnvironmentalScore($cvssObject);
         $cvssObject->severity = $calculator->calculateSeverity($cvssObject);
+        $cvssObject->metrics = self::parseVectorAsArray($vector, $vectorVersion);
 
         return $cvssObject->getResults();
     }
@@ -49,6 +50,15 @@ class CVSS
             CVSS23Object::VERSION_2 => CVSS2Parser::parseVector($vector),
             CVSS23Object::VERSION_30, CVSS23Object::VERSION_31 => CVSS31Parser::parseVector($vector),
             CVSS23Object::VERSION_40 => (new CVSS40Parser())->parseVector($vector),
+        };
+    }
+
+    private static function parseVectorAsArray(string $vector, string $version): array
+    {
+        return match ($version) {
+            CVSS23Object::VERSION_2 => CVSS2Parser::parseBaseValuesAsArray($vector),
+            CVSS23Object::VERSION_30, CVSS23Object::VERSION_31 => CVSS31Parser::parseBaseValuesAsArray($vector),
+            //CVSS23Object::VERSION_40 => (new CVSS40Parser())->parseVector($vector),
         };
     }
 

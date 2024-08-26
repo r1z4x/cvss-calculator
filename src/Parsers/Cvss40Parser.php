@@ -339,4 +339,13 @@ class CVSS40Parser
 
         return $matches[0] ?? null;
     }
+
+    public static function parseBaseValuesAsArray(string $vector): array
+    {
+        $cvssObject = self::parseVector($vector);
+        
+        return [
+           
+        ];
+    }
 }

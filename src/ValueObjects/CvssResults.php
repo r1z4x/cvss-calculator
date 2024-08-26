@@ -8,7 +8,8 @@ class CVSSResults
         public float $baseScore,
         public float $temporalScore,
         public float $environmentalScore,
-        public string $severity
+        public string $severity,
+        public array $metrics
     ) {
     }
 }

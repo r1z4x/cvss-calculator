@@ -217,4 +217,20 @@ class CVSS2Parser
             default => 1.0,
         };
     }
+
+    public static function parseBaseValuesAsArray(string $vector): array
+    {
+        $cvssObject = self::parseVector($vector);
+        
+        return [
+            'accessVector' => self::findOptionalValueInVector($vector, self::BASE_ACCESS_VECTOR),
+            'accessComplexity' => self::findOptionalValueInVector($vector, self::BASE_ATTACK_COMPLEXITY),
+            'authentication' => self::findOptionalValueInVector($vector, self::BASE_AUTHENTICATION),
+            'confidentiality' => self::findOptionalValueInVector($vector, self::BASE_CONFIDENTIALITY),
+            'integrity' => self::findOptionalValueInVector($vector, self::BASE_INTEGRITY),
+            'availability' => self::findOptionalValueInVector($vector, self::BASE_AVAILABILITY)
+        ];
+
+    }
+
 }

@@ -13,9 +13,10 @@ class CVSSObject
     public float $temporalScore = 0.0;
     public float $environmentalScore = 0.0;
     public string $severity = 'N/A';
+    public array $metrics = [];
 
     public function getResults(): CVSSResults
     {
-        return new CVSSResults($this->baseScore, $this->temporalScore, $this->environmentalScore, $this->severity);
+        return new CVSSResults($this->baseScore, $this->temporalScore, $this->environmentalScore, $this->severity, $this->metrics);
     }
 }
